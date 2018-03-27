@@ -1,0 +1,47 @@
+<launch>
+
+    <node name="super_master_node"
+          pkg="mini_project"
+          type="super_master_node.py"
+          output="screen"/>
+
+    <include file = "$(find sweep_ros)/launch/sweep2scan.launch"></include>
+
+    <include file = "$(find sweep_ros)/launch/ewais.launch"></include>
+
+    <node name="lidar_node"
+          pkg="mini_project"
+          type="lidar_node.py"
+          output="screen"/>
+
+    <include file = "$(find jetson_csi_cam)/jetson_csi_cam.launch">
+
+      <arg name = "width" value="320"/>
+      <arg name = "height" value = "180"/>
+      <arg name = "fps" value =  "30"/>
+
+    </include>
+
+    <node name = "imu_raw"
+          pkg = "mini_project"
+          type = "imu_raw"/>
+
+    <node name ="imu_filter_node"
+          pkg = "imu_filter_madgwick"
+          type="imu_filter_node">
+
+        <param name = "use_mag" value = "false"/>
+
+    </node>
+
+    <node name ="imu_euler_node"
+          pkg ="mini_project"
+          type ="imu_euler.py"
+          output ="screen"/>
+
+    <node name="motor_controller_node"
+          pkg="mini_project"
+          type="motor_controller_node.py"
+          output = "screen"/>
+
+</launch>
